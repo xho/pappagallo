@@ -1,0 +1,96 @@
+body {
+	background: transparent url('../img/jungle-bg.jpg') top left repeat;
+	font-family: sans-serif;
+	font-size: .825em;
+	line-height: 1.225em;
+}
+
+p {	margin: .5em auto; }
+a { text-decoration: none; color: #eeb; }
+label { cursor: pointer; }
+
+article {
+	width: 300px;
+	margin: 3em auto;
+	padding: 3em;
+	background-color: #33ccff;
+	color: white;
+	border-radius: 3em;
+	box-shadow: 0 0 4em #000;
+}
+
+article>header {
+	background: transparent url('../img/pappagallo-logo.png') top left no-repeat;
+	height: 150px;
+	width: 100%;
+	margin-bottom: 3em;
+}
+
+article>footer {
+	width: 100%;
+	text-align:  right;
+}
+
+article>div {
+	margin: 2em 0;
+	width: 100%;
+}
+
+
+
+.textarea {
+	border-radius: 1em;
+	box-sizing: border-box;
+	background-color: #fff;
+	color: #888;
+	margin-top: .5em;
+	min-height: 60px;
+	padding: .5em;
+	width: 100%;
+}
+.textarea a {
+	color: #da2;
+}
+
+.counter {
+	border: 0;
+	width: 100%;
+	text-align: right;
+	background-color: transparent;
+	color: #fff;
+}
+
+#at { font-size: 1.2em; position: relative; top: 2px; }
+#user {
+	height: 2em;
+	border-radius: .5em;
+	border: none;
+	font-weight: bold;
+	padding: 0 1em;
+}
+
+#face {
+	display: none;
+	box-sizing: border-box;
+	width: 100%;
+	padding-left: 60px;
+	border-radius: 1em;
+	position: relative;
+}
+#baloon-arrow {
+	position: absolute;
+	top: -2.05em;
+	left: 40px;
+}
+
+#loader {
+	display: none;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.8);
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+}
+
