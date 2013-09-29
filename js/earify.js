@@ -150,7 +150,8 @@ function cleanupText (t, hashtags, URLs) {
 	for (i in earify.tweet.urls) {
 		t = t.split(earify.tweet.urls[i].url).join(' a questo indirizzo web ');
 	}
-	t = t.replace(/\bRT\b/, "retuit ");
+	t = t.replace(/\bRT\b/, " retuit ");
+	t = t.replace(/\btweet\b/, " tuiit ");
 	t = t.replace(/@/g," ");
 	t = t.replace(/:/g,",");
 	t = t.replace(/-/g,",");
