@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html>
-
-	<head>
-		<title>Il pappagallo</title>
-		<meta charset="utf-8">
-<!--		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
-		<script src="js/jquery-1.10.1.min.js"></script>
-		<link rel='stylesheet' href='css/earify.css'/>
-	</head>
-
 <?php
 	if (empty($_GET["user"]))
 		$user = "riotta";
 	else
 		$user = $_GET["user"];
 ?>
+	<head>
+		<title>Pappagallo (ripete <?php echo $user; ?>)</title>
+		<meta charset="utf-8">
+<!--		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<link rel='stylesheet' href='css/earify.css'/>
+	</head>
 
 	<body>
 		<article>

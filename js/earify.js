@@ -34,10 +34,16 @@ var earify = {
 		console.log('0. start');
 		earify.cleanupUI();
 
-		if (!$('#user').val())
-			var user = earify.config.user;
-		else
-			var user = $('#user').val();
+		// set user
+		var user = earify.setUser();
+
+		// update URL & title
+		if ( history.pushState ) {		
+			var newurl = updateQueryString("user", user);
+			var stateObj = { user: user };
+			window.history.pushState(stateObj, "Il pappagallo (ripete " + user, newurl);
+		}
+		document.title = "Pappagallo (ripete " + user + ")";
 
 		// deferred sequence
 		var promise = earify.getTweet(user);
@@ -149,7 +155,7 @@ var earify = {
 			}
 
 			// youtube video
-			/*
+			/* todo
 			if (earify.tweet.videourl) {
 				var embed = '<object width="300" height="225"><param name="movie" value="' + earify.tweet.videourl + '&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + earify.tweet.videourl + '&amp;version=3" type="application/x-shockwave-flash" width="300" height="225" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
 	            $("#video").append(embed);
@@ -175,7 +181,17 @@ var earify = {
 		console.log("6. play: " + audio.src);
 	},
 
-	isPlaying: function(auelement) { return !auelement.paused; }
+	setUser: function() {
+		if (!$('#user').val()) {
+			$('#user').val(earify.config.user);
+			return earify.config.user;
+		}
+		else
+			return $('#user').val();
+	}
+
+
+	// to fix isPlaying: function(auelement) { return !auelement.paused; }
 }
 
 
@@ -196,8 +212,10 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/\bRT\b/, " retuit ");
 	t = t.replace(/\btweet\b/, " tuiit ");
 	t = t.replace(/@/g," ");
-	t = t.replace(/:/g,",");
-	t = t.replace(/-/g,",");
+	t = t.replace(/:/g,", ");
+	t = t.replace(/-/g,", ");
+	t = t.replace(/[.]/g,". ");
+	t = t.replace(/[,]/g,". ");
 	t = t.replace(/#/g,"hashtag ");
 	t = t.replace(/ü/g,"u");
 	t = t.replace(/&lt;/g," minore ");
@@ -208,3 +226,31 @@ function cleanupText (t, hashtags, URLs) {
 }
 
 
+function updateQueryString(key, value, url) {
+    if (!url) url = window.location.href;
+    var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
+
+    if (re.test(url)) {
+        if (typeof value !== 'undefined' && value !== null)
+            return url.replace(re, '$1' + key + "=" + value + '$2$3');
+        else {
+            var hash = url.split('#');
+            url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null) 
+                url += '#' + hash[1];
+            return url;
+        }
+    }
+    else {
+        if (typeof value !== 'undefined' && value !== null) {
+            var separator = url.indexOf('?') !== -1 ? '&' : '?',
+                hash = url.split('#');
+            url = hash[0] + separator + key + '=' + value;
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null) 
+                url += '#' + hash[1];
+            return url;
+        }
+        else
+            return url;
+    }
+}
