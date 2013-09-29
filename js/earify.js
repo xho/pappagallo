@@ -113,7 +113,7 @@ var earify = {
 
 		// URLs
 		for (i in earify.tweet.urls) {
-			$('#urls').append('<a href="earify.tweet.urls[i].expanded_url" target="_blank">' + earify.tweet.urls[i].display_url + '</a><br/>');
+			$('#urls').append('<a href="' + earify.tweet.urls[i].expanded_url + '" target="_blank">' + earify.tweet.urls[i].display_url + '</a><br/>');
 		}
 		$('#nurls').val(earify.tweet.urls.length);
 
