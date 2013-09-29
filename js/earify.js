@@ -73,6 +73,12 @@ var earify = {
 		earify.tweet.screen_name = earify.tmpTweet.user.screen_name;
 		earify.tweet.hashtags = earify.tmpTweet.entities.hashtags;
 		earify.tweet.urls = earify.tmpTweet.entities.urls;
+		if (earify.tmpTweet.entities.media) {
+			console.log ("(media detected)");
+			earify.tweet.mediaurl = earify.tmpTweet.entities.media[0].media_url;
+			earify.tweet.text = earify.tweet.text.split(earify.tmpTweet.entities.media[0].url).join(' ');
+		}
+
 		deferred.resolve();
 		return deferred.promise();
 	},
@@ -82,6 +88,9 @@ var earify = {
 		console.log('1. cleanup UI');
 		$('#text').text('');
 		$('#face').hide();
+		$('#media img').remove();
+		$('#media').hide();
+		$('#urls').text('');
 		$('#hashtags').text('');
 		$('#nhashtags').val(0);
 		$('#urls').text('');
@@ -94,16 +103,9 @@ var earify = {
 		console.log('5. update UI');
 		var deferred = $.Deferred();
 
-		$('#loader').hide(); // hide loader
-
 		// text
 		$('#text').text(earify.tweet.text);
 		countChars();
-
-		//image
-		$('#face').css('background', 'transparent url("' + earify.tweet.profile_image_url + '") top left no-repeat');
-		$('#face #namebio').html('<p><span style="font-weight: bold;">' + earify.tweet.fullname + '</span><br/>' + earify.tweet.bio + '</p>');
-		$('#face').slideDown('slow');
 
 		// hashtags
 		for (i in earify.tweet.hashtags) {
@@ -116,6 +118,28 @@ var earify = {
 			$('#urls').append('<a href="' + earify.tweet.urls[i].expanded_url + '" target="_blank">' + earify.tweet.urls[i].display_url + '</a><br/>');
 		}
 		$('#nurls').val(earify.tweet.urls.length);
+
+		// hide loader
+		$('#loader').fadeOut(4000, function() {
+			// face
+			$('#face').css('background', 'transparent url("' + earify.tweet.profile_image_url + '") top left no-repeat');
+			$('#face #namebio').html('<p><span style="font-weight: bold;">' + earify.tweet.fullname + '</span><br/>' + earify.tweet.bio + '</p>');
+			$('#face').slideDown('slow');
+
+			// photo
+			var img = $("<img />").attr('src', earify.tweet.mediaurl)
+			    .load(function() {
+			        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+			            console.log('broken image!');
+			            return false;
+			        } else {
+			            $("#media").append(img);
+						$('#media').slideDown(2000);
+			        }
+			    });
+		});
+
+
 
 		deferred.resolve();
 		return deferred.promise();

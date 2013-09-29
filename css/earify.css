@@ -84,6 +84,15 @@ article>div {
 	left: 40px;
 }
 
+#media {
+	display: none;
+	box-sizing: border-box;
+	width: 100%;
+}
+#media img { width: 100%; 	border-radius: 1em;
+	overflow: hidden;
+}
+
 #loader {
 	display: none;
 	width: 100%;

@@ -37,6 +37,10 @@
 				<div id="face"><img src="img/baloon-arrow.png" id="baloon-arrow"><div id="namebio"></div></div>
 			</div>
 
+			<div id="media">
+				<p>Fotina allegata:</p>
+			</div>
+
 			<div>
 				Hashtags:
 				<div id="hashtags" class="textarea"></div>
