@@ -92,6 +92,9 @@ article>div {
 #media img { width: 100%; 	border-radius: 1em;
 	overflow: hidden;
 }
+#video {
+	display: none;
+}
 
 #loader {
 	display: none;
