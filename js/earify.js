@@ -203,7 +203,7 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/&lt;/g," minore ");
 	t = t.replace(/&gt;/g," maggiore ");
 
-	t = t.replace(/[^a-zA-Z0-9 -,Èàèéìòùç\']/g,' ');
+	t = t.replace(/[^a-zA-Z0-9 -,Èàèéìòùç!?.\']/g,' ');
 	return t;
 }
 
