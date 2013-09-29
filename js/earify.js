@@ -150,7 +150,7 @@ var earify = {
 
 			// youtube video
 			if (earify.tweet.videourl) {
-				var embed = '<object width="300" height="225"><param name="movie" value="' + earify.tweet.videourl + '&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/Y7b2aw_zV2I?hl=en_GB&amp;version=3" type="application/x-shockwave-flash" width="300" height="225" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
+				var embed = '<object width="300" height="225"><param name="movie" value="' + earify.tweet.videourl + '&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + earify.tweet.videourl + '&amp;version=3" type="application/x-shockwave-flash" width="300" height="225" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
 	            $("#video").append(embed);
 				$('#video').slideDown(2000);
 			}
