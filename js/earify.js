@@ -78,6 +78,11 @@ var earify = {
 			earify.tweet.mediaurl = earify.tmpTweet.entities.media[0].media_url;
 			earify.tweet.text = earify.tweet.text.split(earify.tmpTweet.entities.media[0].url).join(' ');
 		}
+		if (earify.tmpTweet.entities.urls[0].expanded_url.indexOf("youtube.com")) {
+			console.log ("(youtube video detected)");
+			earify.tweet.videourl = earify.tmpTweet.entities.urls[0].expanded_url;
+		}
+
 
 		deferred.resolve();
 		return deferred.promise();
@@ -138,6 +143,19 @@ var earify = {
 							$('#media').slideDown(2000);
 				        }
 				    });
+			}
+
+			// youtube video
+			if (earify.tweet.videourl) {
+//				var embed = '<object width="300" height="225"><param name="movie" value="//www.youtube.com/v/Y7b2aw_zV2I?hl=en_GB&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/Y7b2aw_zV2I?hl=en_GB&amp;version=3" type="application/x-shockwave-flash" width="300" height="225" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
+				var vid = $("<iframe />").attr('src', earify.tweet.videourl)
+										.attr('width', 300)
+										.attr('height', 225)
+										.attr('frameborder', 0)
+										.attr('allowfullscreen', 'allowfullscreen');
+	            $("#video").append(vid);
+
+				$('#video').slideDown(2000);
 			}
 		});
 

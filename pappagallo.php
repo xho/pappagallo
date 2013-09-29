@@ -41,6 +41,10 @@
 				<p>Fotina allegata:</p>
 			</div>
 
+			<div id="video">
+				<p>Video Youtube allegato:</p>
+			</div>
+
 			<div>
 				Hashtags:
 				<div id="hashtags" class="textarea"></div>
