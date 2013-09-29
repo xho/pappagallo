@@ -25,11 +25,11 @@
 			<div>
 				<form id="speech" action=""><span id="at">@</span> <input type="text" id="user" value="<?php echo $user; ?>"> <input type="submit" value="Pappagallo"></form>
 			</div>
-
+<!-- da implementare 
 			<div>
 				<input type="checkbox" id="includerrt" name="includerrt"> <label for="includerrt">Includi reply e RT</label> 
 			</div>
-
+-->
 			<div>
 				Ultimo tweet:
 				<div id="text" class="textarea"></div>

@@ -156,6 +156,9 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/-/g,",");
 	t = t.replace(/#/g,"hashtag ");
 	t = t.replace(/ü/g,"u");
+	t = t.replace(/&lt;/g," minore ");
+	t = t.replace(/&gt;/g," maggiore ");
+
 	t = t.replace(/[^a-zA-Z0-9 -,Èàèéìòùç\']/g,' ');
 	return t;
 }

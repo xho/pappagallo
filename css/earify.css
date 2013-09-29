@@ -72,6 +72,7 @@ article>div {
 #face {
 	display: none;
 	box-sizing: border-box;
+	min-height: 48px;
 	width: 100%;
 	padding-left: 60px;
 	border-radius: 1em;
