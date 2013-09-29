@@ -88,7 +88,7 @@ var earify = {
 		console.log('1. cleanup UI');
 		$('#text').text('');
 		$('#face').hide();
-		$('#media img').remove();
+		$('#media img').remove(); earify.tweet.mediaurl = '';
 		$('#media').hide();
 		$('#urls').text('');
 		$('#hashtags').text('');
@@ -127,16 +127,18 @@ var earify = {
 			$('#face').slideDown('slow');
 
 			// photo
-			var img = $("<img />").attr('src', earify.tweet.mediaurl)
-			    .load(function() {
-			        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-			            console.log('broken image!');
-			            return false;
-			        } else {
-			            $("#media").append(img);
-						$('#media').slideDown(2000);
-			        }
-			    });
+			if (earify.tweet.mediaurl) {
+				var img = $("<img />").attr('src', earify.tweet.mediaurl)
+				    .load(function() {
+				        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+				            console.log('broken image!');
+				            return false;
+				        } else {
+				            $("#media").append(img);
+							$('#media').slideDown(2000);
+				        }
+				    });
+			}
 		});
 
 
