@@ -7,7 +7,7 @@
 		$user = $_GET["user"];
 ?>
 	<head>
-		<title>Pappagallo (ripete <?php echo $user; ?>)</title>
+		<title>Pappagallo [<?php echo $user; ?>]</title>
 		<meta charset="utf-8">
 		<link href="favicon.png" rel="shortcut icon" type="image/x-icon">
 		<link href="favicon.png" rel="icon" type="image/png">

@@ -42,9 +42,9 @@ var earify = {
 		if ( history.pushState ) {		
 			var newurl = updateQueryString("user", user);
 			var stateObj = { user: user };
-			window.history.pushState(stateObj, "Il pappagallo (ripete " + user, newurl);
+			window.history.pushState(stateObj, "Pappagallo [" + user + "]", newurl);
 		}
-		document.title = "Pappagallo (ripete " + user + ")";
+		document.title = "Pappagallo [" + user + "]";
 
 		// deferred sequence
 		var promise = earify.getTweet(user);
