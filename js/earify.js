@@ -228,6 +228,7 @@ var earify = {
 $( document ).ready( earify.init() );
 
 
+
 function countChars () {
 	var len = document.getElementById("text").innerHTML.length;
 	document.getElementById("length").value = len;
@@ -245,7 +246,7 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/:/g,", ");
 	t = t.replace(/-/g,", ");
 	t = t.replace(/[.]/g,". ");
-	t = t.replace(/[,]/g,". ");
+	t = t.replace(/[,]/g,", ");
 	t = t.replace(/#/g,"hashtag ");
 	t = t.replace(/ü/g,"u");
 	t = t.replace(/&lt;/g," minore ");
