@@ -12,7 +12,7 @@ label { cursor: pointer; }
 article {
 	width: 300px;
 	margin: 3em auto;
-	padding: 3em;
+	padding: 3em 3em 8em;
 	background-color: #33ccff;
 	color: white;
 	border-radius: 3em;
@@ -28,9 +28,16 @@ article>header {
 }
 
 article>footer {
-	margin-top: 3em;
-	text-align:  right;
+	-moz-box-sizing: border-box; /* Firefox 1+ */
+	box-sizing: border-box;
 	width: 100%;
+	padding: 2em 3em;
+	background-color: rgba(0, 0, 20, 0.7);
+	color: #CCC;
+	border-radius: 0 0 3em 3em;
+	position: absolute;
+	bottom: 0;
+	left: 0;
 }
 article>footer .note { font-size: 10px; line-height: 13px; }
 
@@ -43,6 +50,7 @@ article>div {
 
 .textarea {
 	border-radius: 1em;
+	-moz-box-sizing: border-box; /* Firefox 1+ */
 	box-sizing: border-box;
 	background-color: #fff;
 	color: #888;
@@ -74,6 +82,7 @@ article>div {
 
 #face {
 	display: none;
+	-moz-box-sizing: border-box; /* Firefox 1+ */
 	box-sizing: border-box;
 	min-height: 48px;
 	width: 100%;
@@ -89,6 +98,7 @@ article>div {
 
 #media {
 	display: none;
+	-moz-box-sizing: border-box; /* Firefox 1+ */
 	box-sizing: border-box;
 	width: 100%;
 }
@@ -107,6 +117,7 @@ article>div {
 	left: 55%;
 	top: 15%;
 	max-width: 40%;
+	-moz-box-sizing: border-box; /* Firefox 1+ */
 	box-sizing: border-box;
 	padding: .5em 1em;
 	border-radius: 1em;
@@ -133,3 +144,30 @@ article>div {
 	z-index: 1000;
 }
 
+
+
+
+/*
+** utility classes
+*/
+.box-transition-slow {
+  -webkit-transition: all 1.5s ease-out 1s;  /* Chrome 1-25, Safari 3.2+ */
+     -moz-transition: all 1.5s ease-out 1s;  /* Firefox 4-15 */
+       -o-transition: all 1.5s ease-out 1s;  /* Opera 10.50–12.00 */
+          transition: all 1.5s ease-out 1s;  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+}
+
+
+.clearfix:before,
+.clearfix:after {
+	content: " ";
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+.clearfix {
+	*zoom: 1;
+}

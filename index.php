@@ -17,7 +17,7 @@
 	</head>
 
 	<body>
-		<article>
+		<article class="box-transition-slow">
 
 			<header>
 			</header>
@@ -57,17 +57,19 @@
 				<input type="text" id="nurls" value="0" class="counter" readonly>
 			</div>
 
-			<footer>
+			<footer class="box-transition-slow">
 				<p style="font-weight: bold;">Il Pappagallo v0.1b</p>
 				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/batopa" target="_blank">@bato</a>
 					| GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>Immagine di background di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>
-				<p class="note">NB: è una app HTML5 sperimentale, fatta in poche ora.<br/>Se non funzia #ESC</p>
+				<p class="note">La sintesi vocale è momentaneamente affidata a <a href="http://www.masswerk.at/mespeak/" target="_blank">mespeak.js</a>.<br/>Questa è una app HTML5 sperimentale in attesa di evoluzione.<br/>Se non funzia #ESC</p>
 			</footer>
 
 			<section id="error"><img src="img/baloon-arrow-lx.png"><div class="msg">Errore</div></section>
-
 		</article>
+
+
+
 		<section id="loader"></section>
 
 		<!-- fork on github banner -->

@@ -26,6 +26,17 @@ var earify = {
 			e.preventDefault();
 			earify.sequence();
 		});
+
+		earify.intro();
+	},
+
+
+	// intro animation
+	intro: function() {
+		var pt = Number($("article>footer").css('padding-top').substring(0, $("article>footer").css('padding-top').length - 2)) ;
+		var pb = Number($("article>footer").css('padding-top').substring(0, $("article>footer").css('padding-top').length - 2)) ;
+		var h = pt + pb + $("article>footer").height() + 26;
+		$("article").css('padding-bottom', h);
 	},
 
 
