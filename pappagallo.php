@@ -55,7 +55,8 @@
 				<input type="text" id="nurls" value="0" class="counter" readonly>
 			</div>
 
-			<footer><p>Il Pappagallo | 0.1b 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> | GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
+			<footer>
+				<p>Il Pappagallo | 0.1b 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> | GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>L'immagine di background è di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>
 				<p>NB: è un esperimento beta, se non funzia #ESC</p>
 			</footer>
