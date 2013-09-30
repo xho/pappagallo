@@ -22,7 +22,6 @@ var earify = {
 		$.extend( earify.config, settings );
 
 		// execute on click
-		//$('#speech').on('click', earify.sequence);
 		$('#speech').submit(function(e) {
 			e.preventDefault();
 			earify.sequence();
@@ -133,13 +132,13 @@ var earify = {
 
 		// text
 		$('#text').text(earify.tweet.text);
-		countChars();
+		$("#length").val(document.getElementById("text").innerHTML.length);
 
 		// hashtags
 		for (i in earify.tweet.hashtags) {
-			$('#hashtags').append('<a href="http://twitter.com/search?src=hash&q=%23' + earify.tweet.hashtags[i].text + '" target="_blank">#' + earify.tweet.hashtags[i].text + '</a> ');
+			$('#hashtags .textarea').append('<a href="http://twitter.com/search?src=hash&q=%23' + earify.tweet.hashtags[i].text + '" target="_blank">#' + earify.tweet.hashtags[i].text + '</a> ');
 		}
-		$('#nhashtags .textarea').val(earify.tweet.hashtags.length);
+		$('#nhashtags').val(earify.tweet.hashtags.length);
 
 		// URLs
 		for (i in earify.tweet.urls) {
@@ -184,19 +183,20 @@ var earify = {
 			*/
 		});
 
-
-
 		deferred.resolve();
 		return deferred.promise();
 	},
 
 
 	play: function() {
-		var audio = new Audio();
 		var t = cleanupText(earify.tweet.text, earify.tweet.hashtags, earify.tweet.urls);
 		console.log(t);
+
+/*	Non usato per ora, in attesa di utilizzare un API esterno (Google language, TTS o altre)
+		var audio = new Audio();
 		audio.src = earify.config.apiURL + '&q=' + encodeURIComponent(t);
-		//audio.play();
+		audio.play();
+*/
 		meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 });
 		console.log("6. play: " + audio.src);
 	},
@@ -229,6 +229,10 @@ $( document ).ready( earify.init() );
 
 
 
+/*
+** more function
+*/
+
 function countChars () {
 	var len = document.getElementById("text").innerHTML.length;
 	document.getElementById("length").value = len;
@@ -237,6 +241,8 @@ function countChars () {
 
 function cleanupText (t, hashtags, URLs) {
 	console.log("text: " + text, "hashtags: " +  hashtags, "URLs: " + URLs);
+
+	// some text correction for italian pronounce
 	for (i in earify.tweet.urls) {
 		t = t.split(earify.tweet.urls[i].url).join(' a questo indirizzo web ');
 	}
@@ -247,7 +253,7 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/-/g,", ");
 	t = t.replace(/[.]/g,". ");
 	t = t.replace(/[,]/g,", ");
-	t = t.replace(/#/g,"hashtag ");
+	t = t.replace(/#/g,"ashtag ");
 	t = t.replace(/ü/g,"u");
 	t = t.replace(/&lt;/g," minore ");
 	t = t.replace(/&gt;/g," maggiore ");
@@ -255,6 +261,7 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/[^a-zA-Z0-9 -,Èàèéìòùç!?.\']/g,' ');
 	return t;
 }
+
 
 
 function updateQueryString(key, value, url) {

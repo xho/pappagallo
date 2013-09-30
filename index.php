@@ -62,7 +62,7 @@
 				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/batopa" target="_blank">@bato</a>
 					| GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>Immagine di background di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>
-				<p>NB: app HTML5 sperimentale, se non funzia #ESC</p>
+				<p class="note">NB: app HTML5 sperimentale, se non funzia #ESC</p>
 			</footer>
 
 			<section id="error"><img src="img/baloon-arrow-lx.png"><div class="msg">Errore</div></section>
@@ -73,6 +73,7 @@
 		<!-- fork on github banner -->
 		<a href="https://github.com/xho/pappagallo" title="Fork this project on Github" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 	</body>
+
 
 	<script src="js/mespeak/mespeak.js"></script>
 	<script type="text/javascript">
