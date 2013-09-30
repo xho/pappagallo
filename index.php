@@ -9,6 +9,8 @@
 	<head>
 		<title>Pappagallo (ripete <?php echo $user; ?>)</title>
 		<meta charset="utf-8">
+		<link href="favicon.png" rel="shortcut icon" type="image/x-icon">
+		<link href="favicon.png" rel="icon" type="image/png">
 <!--		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
 		<script src="js/jquery-1.10.1.min.js"></script>
 		<link rel='stylesheet' href='css/earify.css'/>
@@ -57,7 +59,7 @@
 
 			<footer>
 				<p style="font-weight: bold;">Il Pappagallo v0.1b</p>
-				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/xho" target="_blank">@xho</a>
+				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/batopa" target="_blank">@bato</a>
 					| GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>Immagine di background di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>
 				<p>NB: app HTML5 sperimentale, se non funzia #ESC</p>
