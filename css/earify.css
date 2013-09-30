@@ -4,7 +4,7 @@ body {
 	font-size: .825em;
 	line-height: 1.225em;
 }
-
+::selection { background: #cd8; text-shadow: none; }
 p {	margin: .5em auto; }
 a { text-decoration: none; color: #eeb; }
 label { cursor: pointer; }
@@ -17,6 +17,7 @@ article {
 	color: white;
 	border-radius: 3em;
 	box-shadow: 0 0 4em #000;
+	position: relative;
 }
 
 article>header {
@@ -27,8 +28,9 @@ article>header {
 }
 
 article>footer {
-	width: 100%;
+	margin-top: 3em;
 	text-align:  right;
+	width: 100%;
 }
 
 article>div {
@@ -36,7 +38,7 @@ article>div {
 	width: 100%;
 }
 
-
+#tweet, #hashtags, #urls { display: none; }
 
 .textarea {
 	border-radius: 1em;
@@ -94,6 +96,28 @@ article>div {
 }
 #video {
 	display: none;
+}
+
+
+#error {
+	display: none;
+	position: absolute;
+	left: 55%;
+	top: 15%;
+	max-width: 40%;
+	box-sizing: border-box;
+	padding: .5em 1em;
+	border-radius: 1em;
+	box-shadow: 0 0 2em rgba(0, 0, 0, 0.5);
+	background-color: #FFF;
+	font-size: 1.225em;
+	color: #000;
+	z-index: 100;
+}
+#error img {
+	position: absolute;
+	top: 5px;
+	left: -12px;
 }
 
 #loader {

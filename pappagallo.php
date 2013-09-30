@@ -28,7 +28,7 @@
 				<input type="checkbox" id="includerrt" name="includerrt"> <label for="includerrt">Includi reply e RT</label> 
 			</div>
 -->
-			<div>
+			<div id="tweet">
 				Ultimo tweet:
 				<div id="text" class="textarea"></div>
 				<input type="text" id="length" value="0" class="counter" readonly>
@@ -43,15 +43,15 @@
 				<p>Video Youtube allegato:</p>
 			</div>
 
-			<div>
+			<div id="hashtags">
 				Hashtags:
-				<div id="hashtags" class="textarea"></div>
+				<div class="textarea"></div>
 				<input type="text" id="nhashtags" value="0" class="counter" readonly>
 			</div>
 
-			<div>
+			<div id="urls">
 				URLs:
-				<div id="urls" class="textarea"></div>
+				<div class="textarea"></div>
 				<input type="text" id="nurls" value="0" class="counter" readonly>
 			</div>
 
@@ -60,8 +60,10 @@
 				<p>NB: è un esperimento beta, se non funzia #ESC</p>
 			</footer>
 
-			<section id="loader"></section>
+			<section id="error"><img src="img/baloon-arrow-lx.png"><div class="msg">Errore</div></section>
+
 		</article>
+		<section id="loader"></section>
 
 	</body>
 

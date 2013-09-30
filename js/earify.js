@@ -32,6 +32,7 @@ var earify = {
 	// all sequence to play and reenable UI
 	sequence: function() {
 		console.log('0. start');
+		$('#loader').show();
 		earify.cleanupUI();
 
 		// set user
@@ -50,19 +51,29 @@ var earify = {
 		promise
 			.then(earify.setTweet)
 			.then(earify.updateUI)
-			.done(earify.play);
+			.done(earify.play)
+			.fail( function() { earify.cleanupUI(); $('#loader').hide(); earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste'); } );
 	},
 
 
 	getTweet: function(user)  {
-		console.log('2. get tweet');
+		console.log('2. get last tweet of ' + user);
 		var deferred = $.Deferred();
 	 
 		$.get(earify.config.proxyURL + user, function( response ) {
-			console.log('3. success, got tweet');
-			earify.tmpTweet =  jQuery.parseJSON( response );
-			deferred.resolve();
+			if (response) {				
+				console.log('3. success, got tweet');
+				earify.tmpTweet =  jQuery.parseJSON( response );
+				deferred.resolve();
+			} else {
+				console.log('3. error, empty response to request');
+				deferred.reject();
+			}
 		})
+		.fail(function() {
+			console.log( "3. Error, unable to reach twitter proxy" );
+			// todo
+		});
 	 
 		return deferred.promise();
 	},
@@ -104,12 +115,13 @@ var earify = {
 		$('#media img').remove(); earify.tweet.mediaurl = '';
 		$('#media object').remove(); earify.tweet.videourl = '';
 		$('#media').hide();
-		$('#urls').text('');
-		$('#hashtags').text('');
+		$('#urls .textarea').text('');
+		$('#hashtags').hide();
+		$('#hashtags .textarea').text('');
 		$('#nhashtags').val(0);
-		$('#urls').text('');
+		$('#urlss').hide();
+		$('#urls .textarea').text('');
 		$('#nurls').val(0);
-		$('#loader').show();
 	},
 
 
@@ -125,13 +137,19 @@ var earify = {
 		for (i in earify.tweet.hashtags) {
 			$('#hashtags').append('<a href="http://twitter.com/search?src=hash&q=%23' + earify.tweet.hashtags[i].text + '" target="_blank">#' + earify.tweet.hashtags[i].text + '</a> ');
 		}
-		$('#nhashtags').val(earify.tweet.hashtags.length);
+		$('#nhashtags .textarea').val(earify.tweet.hashtags.length);
 
 		// URLs
 		for (i in earify.tweet.urls) {
-			$('#urls').append('<a href="' + earify.tweet.urls[i].expanded_url + '" target="_blank">' + earify.tweet.urls[i].display_url + '</a><br/>');
+			$('#urls .textarea').append('<a href="' + earify.tweet.urls[i].expanded_url + '" target="_blank">' + earify.tweet.urls[i].display_url + '</a><br/>');
 		}
 		$('#nurls').val(earify.tweet.urls.length);
+
+		$('#tweet').slideDown('slow');
+		if(earify.tweet.hashtags.length)
+			$('#hashtags').slideDown('slow');
+		if(earify.tweet.urls.length)
+			$('#urls').slideDown('slow');
 
 		// hide loader
 		$('#loader').fadeOut(4000, function() {
@@ -181,6 +199,7 @@ var earify = {
 		console.log("6. play: " + audio.src);
 	},
 
+
 	setUser: function() {
 		if (!$('#user').val()) {
 			$('#user').val(earify.config.user);
@@ -188,8 +207,17 @@ var earify = {
 		}
 		else
 			return $('#user').val();
-	}
+	},
 
+
+	triggerError: function (msg) {
+		console.log('Sequence failed. Triggering error: ' + msg);
+		$('#error .msg').html(msg)
+		$('#error').fadeIn(1000, function() {
+			setTimeout(function() { $('#error').fadeOut(); }, 6000);
+		});
+		
+	}
 
 	// to fix isPlaying: function(auelement) { return !auelement.paused; }
 }
