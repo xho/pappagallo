@@ -14,7 +14,8 @@ var earify = {
 			user: "riotta",
 			proxyURL : "http://xho.bedita.net/var/earify-twitter-proxy.php?user=",
 			lang : "it",
-			apiURL : "http://tts-api.com/tts.mp3?"
+			apiURL : "http://tts-api.com/tts.mp3?",
+			messageTimeout : 5000
 		};
 
 		// allow overriding the default config
@@ -112,6 +113,7 @@ var earify = {
 		console.log('1. cleanup UI');
 		$('#text').text('');
 		$('#face').hide();
+		$('#tweet').hide();
 		$('#media img').remove(); earify.tweet.mediaurl = '';
 		$('#media object').remove(); earify.tweet.videourl = '';
 		$('#media').hide();
@@ -214,7 +216,7 @@ var earify = {
 		console.log('Sequence failed. Triggering error: ' + msg);
 		$('#error .msg').html(msg)
 		$('#error').fadeIn(1000, function() {
-			setTimeout(function() { $('#error').fadeOut(); }, 6000);
+			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
 		});
 		
 	}
