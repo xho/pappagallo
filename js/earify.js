@@ -196,9 +196,9 @@ var earify = {
 		var audio = new Audio();
 		audio.src = earify.config.apiURL + '&q=' + encodeURIComponent(t);
 		audio.play();
+		console.log("6. play: " + audio.src);
 */
 		meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 });
-		console.log("6. play: " + audio.src);
 	},
 
 

@@ -62,7 +62,7 @@
 				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/batopa" target="_blank">@bato</a>
 					| GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>Immagine di background di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>
-				<p class="note">NB: app HTML5 sperimentale, se non funzia #ESC</p>
+				<p class="note">NB: è una app HTML5 sperimentale, fatta in poche ora.<br/>Se non funzia #ESC</p>
 			</footer>
 
 			<section id="error"><img src="img/baloon-arrow-lx.png"><div class="msg">Errore</div></section>
