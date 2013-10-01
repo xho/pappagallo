@@ -12,7 +12,7 @@ label { cursor: pointer; }
 article {
 	width: 300px;
 	margin: 3em auto;
-	padding: 3em 3em 5em;
+	padding: 3em 3em;
 	background-color: #33ccff;
 	color: white;
 	border-radius: 3em;
@@ -32,7 +32,7 @@ article>footer {
 	box-sizing: border-box;
 	width: 100%;
 	padding: 2em 3em;
-	background-color: rgba(0, 0, 20, 0.7);
+	background-color: #1D223C;
 	color: #CCC;
 	border-radius: 0 0 3em 3em;
 	position: absolute;

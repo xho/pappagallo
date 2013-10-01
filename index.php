@@ -36,13 +36,15 @@
 			</div>
 
 			<div id="options">
-				<input type="checkbox" id="polltweet" name="polltweet"> <label for="polltweet">Aggiorna automaticamente</label> 
+				<p>
+					<input type="checkbox" id="polltweet" name="polltweet"> <label for="polltweet">Aggiorna automaticamente</label><br/>
+				</p>
+				<p>
+					<input type="checkbox" id="excludereplies" name="excludereplies"> <label for="excludereplies">Escludi replies</label>
+					<input type="checkbox" id="excludert" name="excludert" style="margin-left: 2em;"> <label for="excludert">Escludi RT</label> 
+				</p>
 			</div>
-<!-- da implementare 
-			<div>
-				<input type="checkbox" id="includerrt" name="includerrt"> <label for="includerrt">Includi reply e RT</label> 
-			</div>
--->
+
 			<div id="tweet">
 				Ultimo tweet:
 				<div id="text" class="textarea"></div>
@@ -71,7 +73,7 @@
 			</div>
 
 			<footer class="box-transition-slow">
-				<p style="font-weight: bold;">Il Pappagallo v0.1b</p>
+				<p style="font-weight: bold;">Il Pappagallo v0.1</p>
 				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/batopa" target="_blank">@bato</a>
 					| GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>Immagine di background di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>

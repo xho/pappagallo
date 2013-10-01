@@ -34,10 +34,12 @@ var earify = {
 		earify.config = {
 			user: "riotta",
 			proxyURL : "http://xho.bedita.net/var/earify-twitter-proxy.php?user=",
+			apiURL : "http://tts-api.com/tts.mp3?", // unused
 			lang : "it",
-			apiURL : "http://tts-api.com/tts.mp3?",
 			messageTimeout : 5000,
-			checkTweetTimeout: 15000
+			autoUpdateEvery : 15000, // ms
+			excludeReplies : false,
+			excludeRT : false
 		};
 
 		// allow overriding the default config
@@ -58,6 +60,8 @@ var earify = {
 		});
 
 		$('#polltweet').on('click', earify.togglePolling);
+		$('#excludereplies').on('click', function() { earify.config.excludeReplies = !(earify.config.excludeReplies); });
+		$('#excludert').on('click', function() { earify.config.excludeRT = !(earify.config.excludeRT) });
 
 		earify.intro();
 	},
@@ -121,7 +125,9 @@ var earify = {
 		console.log('2. get last tweet of ' + user);
 		var deferred = $.Deferred();
 	 
-		$.get(earify.config.proxyURL + user, function( response ) {
+	 	var url = earify.config.proxyURL + user + "&excludert=" + earify.config.excludeRT.toString() + "&excludereplies=" + earify.config.excludeReplies.toString();
+
+		$.get(url, function( response ) {
 			if (response) {				
 				console.log('3. success, got tweet');
 				earify.originalTweet =  jQuery.parseJSON( response );
@@ -268,7 +274,7 @@ var earify = {
 		else t = cleanupText(t, earify.config.lang);
 		console.log(t);
 
-/*	Non usato per ora, in attesa di utilizzare un API esterno (Google language, TTS o altre)
+/*	Non usato per ora, in attesa di utilizzare un API esterna (Google language, TTS o altre) non succederà perché vogliono i milioni
 		var audio = new Audio();
 		audio.src = earify.config.apiURL + '&q=' + encodeURIComponent(t);
 		audio.play();
@@ -313,7 +319,7 @@ var earify = {
 			$('#speech').slideUp();
 			earify.pollingId = setInterval(function() {
 				earify.sequence();
-			}, earify.config.checkTweetTimeout);
+			}, earify.config.autoUpdateEvery);
 		} else {
 			$('#speech').slideDown();
 			clearInterval(earify.pollingId)
@@ -364,6 +370,7 @@ function cleanupText (t, lang, hashtags, URLs) {
 
 	// specific italian pronounce
 	if (lang == "it") {
+		t = replaceEmoticons(t);
 		t = t.replace(/\bRT\b/gi, " retuiit ");
 		t = t.replace(/\btweet\b/gi, " tuiit ");
 		t = t.replace(/:/g," due punti ");
@@ -371,7 +378,6 @@ function cleanupText (t, lang, hashtags, URLs) {
 		t = t.replace(/&lt;/g," minore ");
 		t = t.replace(/&gt;/g," maggiore ");
 	}
-	t = replaceEmoticons(t);
 
 	t = t.replace(/@/g," ");
 	t = t.replace(/-/g,", ");
@@ -391,7 +397,7 @@ function replaceEmoticons(text) {
     ':-)' : ' faccina sorridente',
     ':)'  : ' faccina sorridente ',
     ':('  : ' faccina triste ',
-    ':D'  : ' faccina grande risata ',
+    ':D'  : ' faccina grande risata ah ah ah ',
     ':-|' : ' faccina basita F4 ',
     ':|'  : ' faccina basita F4 '
   }, patterns = [],
