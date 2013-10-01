@@ -3,8 +3,13 @@
 
 var earify = {
 
-	tmpTweet: {},
+	originalTweet: {},
 	tweet: {},
+
+	/**
+	 * true when seqeunce is running
+	 */
+	sequenceRunning: false,
 
 	/**
 	 * store the last tweet id attribute
@@ -32,7 +37,7 @@ var earify = {
 			lang : "it",
 			apiURL : "http://tts-api.com/tts.mp3?",
 			messageTimeout : 5000,
-			checkTweetTimeout: 10000
+			checkTweetTimeout: 15000
 		};
 
 		// allow overriding the default config
@@ -62,8 +67,10 @@ var earify = {
 
 	// all sequence to play and reenable UI
 	sequence: function() {
-		if (!earify.isPlaying()) {
+		if (!earify.sequenceRunning && !earify.isPlaying()) {
 			console.log('0. start');
+			earify.sequenceRunning = true;
+
 			$('#loader').show();
 
 			// set user
@@ -94,7 +101,10 @@ var earify = {
 			.fail(function() {
 				earify.cleanupUI();
 				$('#loader').hide();
-				earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste.');
+				earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste. Firulì.');
+			})
+			.always(function() {
+				earify.sequenceRunning = false;
 			});
 		}
 	},
@@ -107,7 +117,7 @@ var earify = {
 		$.get(earify.config.proxyURL + user, function( response ) {
 			if (response) {				
 				console.log('3. success, got tweet');
-				earify.tmpTweet =  jQuery.parseJSON( response );
+				earify.originalTweet =  jQuery.parseJSON( response );
 				deferred.resolve();
 			} else {
 				console.log('3. error, empty response to request');
@@ -126,23 +136,23 @@ var earify = {
 	setTweet: function() {
 		console.log('4. set tweet');
 		var deferred = $.Deferred();
-		earify.tweet.text = earify.tmpTweet.text;
-		earify.tweet.name = earify.tmpTweet.user.name;
-		earify.tweet.fullname = earify.tmpTweet.user.name;
-		earify.tweet.bio = earify.tmpTweet.user.description;
-		earify.tweet.profile_image_url = earify.tmpTweet.user.profile_image_url;
-		earify.tweet.screen_name = earify.tmpTweet.user.screen_name;
-		earify.tweet.hashtags = earify.tmpTweet.entities.hashtags;
-		earify.tweet.urls = earify.tmpTweet.entities.urls;
-		if (earify.tmpTweet.entities.media) {
+		earify.tweet.text = earify.originalTweet.text;
+		earify.tweet.name = earify.originalTweet.user.name;
+		earify.tweet.fullname = earify.originalTweet.user.name;
+		earify.tweet.bio = earify.originalTweet.user.description;
+		earify.tweet.profile_image_url = earify.originalTweet.user.profile_image_url;
+		earify.tweet.screen_name = earify.originalTweet.user.screen_name;
+		earify.tweet.hashtags = earify.originalTweet.entities.hashtags;
+		earify.tweet.urls = earify.originalTweet.entities.urls;
+		if (earify.originalTweet.entities.media) {
 			console.log ("(media detected)");
-			earify.tweet.mediaurl = earify.tmpTweet.entities.media[0].media_url;
-			earify.tweet.text = earify.tweet.text.split(earify.tmpTweet.entities.media[0].url).join(' ');
+			earify.tweet.mediaurl = earify.originalTweet.entities.media[0].media_url;
+			earify.tweet.text = earify.tweet.text.split(earify.originalTweet.entities.media[0].url).join(' ');
 		}
-		if (earify.tmpTweet.entities.urls.length) {
-			if (earify.tmpTweet.entities.urls[0].expanded_url && earify.tmpTweet.entities.urls[0].expanded_url.indexOf("youtube.com")) {
+		if (earify.originalTweet.entities.urls.length) {
+			if (earify.originalTweet.entities.urls[0].expanded_url && earify.originalTweet.entities.urls[0].expanded_url.indexOf("youtube.com")) {
 				console.log ("(youtube video detected)");
-				earify.tweet.videourl = earify.tmpTweet.entities.urls[0].expanded_url;
+				earify.tweet.videourl = earify.originalTweet.entities.urls[0].expanded_url;
 			}
 		}
 
@@ -153,7 +163,7 @@ var earify = {
 	isNewTweet: function() {
 		var isNew = false;
 		if (earify.lastTweetId) {
-			if (earify.lastTweetId != earify.tmpTweet.id) {
+			if (earify.lastTweetId != earify.originalTweet.id) {
 				isNew = true;
 			}
 		} else {
@@ -261,12 +271,12 @@ var earify = {
 		try {
 			meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 }, function() {
 				earify.playingMessage = false;
-				earify.lastTweetId = earify.tmpTweet.id;
+				earify.lastTweetId = earify.originalTweet.id;
 			});
 		} catch (e) {
 			earify.playingMessage = false;
 			console.error('error: ' +  e.name + " - " + e.message);
-			earify.triggerError('Ops, c\'è stato un errore. Non riesco a ripetere il tweet');
+			earify.triggerError('Bourpp, ho mangiato pesante. Non riesco a ripetere il twiit.');
 		}
 	},
 
@@ -356,8 +366,9 @@ function replaceEmoticons(text) {
     ':-)' : ' faccina sorridente',
     ':)'  : ' faccina sorridente ',
     ':('  : ' faccina triste ',
-    ':D'  : 'faccina grande risata ',
-    ':-|'  : ' faccina basita F4 '
+    ':D'  : ' faccina grande risata ',
+    ':-|' : ' faccina basita F4 ',
+    ':|'  : ' faccina basita F4 '
   }, patterns = [],
      metachars = /[[\]{}()*+?.\\|^$\-,&#\s]/g;
 
