@@ -115,7 +115,7 @@ var earify = {
 		})
 		.fail(function() {
 			console.log( "3. Error, unable to reach twitter proxy" );
-			// todo
+			deferred.reject();
 		});
 	 
 		return deferred.promise();
