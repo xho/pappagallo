@@ -1,4 +1,4 @@
-pappagallo
+Pappagallo
 ==========
 
 Pappagallo (Parrot in english) is a HTML 5 concept app.
@@ -9,7 +9,7 @@ Defaults to @riotta.
 
 
 
-INSTALL
+Install
 -------
 
 1. create a Twitter application (http://dev.twitter.com) for the proxy and obtain consumer key, secret, access token key, access token secret (generate the last two)
@@ -20,7 +20,7 @@ INSTALL
 
 
 
-USAGE
+Usage
 -----
 
 Click "pappagallo".
@@ -29,14 +29,14 @@ For devs: in browser console (such as in Chrome developer tool) you have some lo
 
 
 
-LICENSE
+License
 -------
 
 GNU GPLv3 - http://www.gnu.org/copyleft/gpl.html
 
 
 
-THIRD PARTY SOFTWARE USED
+Third party software used
 -------------------------
 
 * meSpeak.js - temporary, may change in the future - http://www.masswerk.at/mespeak/
@@ -44,14 +44,14 @@ THIRD PARTY SOFTWARE USED
 
 
 
-ONLINE EXAMPLE
+Online example
 --------------
 
 http://xho.bedita.net/pappagallo/
 
 
 
-CONTRIBUTORS
+Contributors
 ------------
 
 xho - http://twitter.com/xho
