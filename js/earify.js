@@ -63,7 +63,7 @@ var earify = {
 			.then(earify.setTweet)
 			.then(earify.updateUI)
 			.done(earify.play)
-			.fail( function() { earify.cleanupUI(); $('#loader').hide(); earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste'); } );
+			.fail( function() { earify.cleanupUI(); $('#loader').hide(); earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste.'); } );
 	},
 
 
@@ -199,8 +199,12 @@ var earify = {
 	},
 
 
-	play: function() {
-		var t = cleanupText(earify.tweet.text, earify.tweet.hashtags, earify.tweet.urls);
+	play: function(t) {
+		if (!t) {
+			console.log("text: " + earify.tweet.text, "hashtags: " +  earify.tweet.hashtags, "URLs: " + earify.tweet.urls);
+			t = cleanupText(earify.tweet.text, earify.tweet.hashtags, earify.tweet.urls);
+		}
+		else t = cleanupText(t);
 		console.log(t);
 
 /*	Non usato per ora, in attesa di utilizzare un API esterno (Google language, TTS o altre)
@@ -227,6 +231,7 @@ var earify = {
 		console.log('Sequence failed. Triggering error: ' + msg);
 		$('#error .msg').html(msg)
 		$('#error').fadeIn(1000, function() {
+			earify.play(msg);
 			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
 		});
 		
@@ -251,7 +256,6 @@ function countChars () {
 
 
 function cleanupText (t, hashtags, URLs) {
-	console.log("text: " + text, "hashtags: " +  hashtags, "URLs: " + URLs);
 
 	// some text correction for italian pronounce
 	for (i in earify.tweet.urls) {
@@ -260,18 +264,48 @@ function cleanupText (t, hashtags, URLs) {
 	t = t.replace(/\bRT\b/, " retuit ");
 	t = t.replace(/\btweet\b/, " tuiit ");
 	t = t.replace(/@/g," ");
-	t = t.replace(/:/g,", ");
+	t = replaceEmoticons(t);
+
+	t = t.replace(/:/g," due punti ");
 	t = t.replace(/-/g,", ");
 	t = t.replace(/[.]/g,". ");
 	t = t.replace(/[,]/g,", ");
 	t = t.replace(/#/g,"ashtag ");
 	t = t.replace(/ü/g,"u");
+	t = t.replace(/c\u0027è/g,"ce"); // c'è
 	t = t.replace(/&lt;/g," minore ");
 	t = t.replace(/&gt;/g," maggiore ");
+
 
 	t = t.replace(/[^a-zA-Z0-9 -,Èàèéìòùç!?.\']/g,' ');
 	return t;
 }
+
+
+function replaceEmoticons(text) {
+  var emoticons = {
+    ':-)' : ' faccina sorridente',
+    ':)'  : ' faccina sorridente ',
+    ':('  : ' faccina triste ',
+    ':D'  : 'faccina grande risata ',
+    ':-|'  : ' faccina basita F4 '
+  }, patterns = [],
+     metachars = /[[\]{}()*+?.\\|^$\-,&#\s]/g;
+
+  // build a regex pattern for each defined property
+  for (var i in emoticons) {
+    if (emoticons.hasOwnProperty(i)){ // escape metacharacters
+      patterns.push('('+i.replace(metachars, "\\$&")+')');
+    }
+  }
+
+  // build the regular expression and replace
+  return text.replace(new RegExp(patterns.join('|'),'g'), function (match) {
+    return typeof emoticons[match] != 'undefined' ?
+           emoticons[match] : match;
+  });
+}
+
 
 
 
