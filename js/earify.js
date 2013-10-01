@@ -52,7 +52,9 @@ var earify = {
 
 		// change language
 		$('#language').on('change', function() {
-			earify.changeLanguage( $('#language').val() );
+			var l = $(this).val();
+			earify.changeLanguage( l );
+			earify.config.lang = l;
 		});
 
 		$('#polltweet').on('click', earify.togglePolling);
@@ -261,9 +263,9 @@ var earify = {
 	play: function(t) {
 		if (!t) {
 			console.log("text: " + earify.tweet.text, "hashtags: " +  earify.tweet.hashtags, "URLs: " + earify.tweet.urls);
-			t = cleanupText(earify.tweet.text, earify.tweet.hashtags, earify.tweet.urls);
+			t = cleanupText(earify.tweet.text, earify.config.lang, earify.tweet.hashtags, earify.tweet.urls);
 		}
-		else t = cleanupText(t);
+		else t = cleanupText(t, earify.config.lang);
 		console.log(t);
 
 /*	Non usato per ora, in attesa di utilizzare un API esterno (Google language, TTS o altre)
@@ -353,26 +355,30 @@ function countChars () {
 }
 
 
-function cleanupText (t, hashtags, URLs) {
+function cleanupText (t, lang, hashtags, URLs) {
 
-	// some text correction for italian pronounce
+	// replace URLs
 	for (i in earify.tweet.urls) {
 		t = t.split(earify.tweet.urls[i].url).join(' a questo indirizzo web ');
 	}
-	t = t.replace(/\bRT\b/, " retuit ");
-	t = t.replace(/\btweet\b/, " tuiit ");
-	t = t.replace(/@/g," ");
+
+	// specific italian pronounce
+	if (lang == "it") {
+		t = t.replace(/\bRT\b/gi, " retuiit ");
+		t = t.replace(/\btweet\b/gi, " tuiit ");
+		t = t.replace(/:/g," due punti ");
+		t = t.replace(/c\u0027è/gi,"ce"); // c'è
+		t = t.replace(/&lt;/g," minore ");
+		t = t.replace(/&gt;/g," maggiore ");
+	}
 	t = replaceEmoticons(t);
 
-	t = t.replace(/:/g," due punti ");
+	t = t.replace(/@/g," ");
 	t = t.replace(/-/g,", ");
 	t = t.replace(/[.]/g,". ");
 	t = t.replace(/[,]/g,", ");
 	t = t.replace(/#/g,"ashtag ");
-	t = t.replace(/ü/g,"u");
-	t = t.replace(/c\u0027è/g,"ce"); // c'è
-	t = t.replace(/&lt;/g," minore ");
-	t = t.replace(/&gt;/g," maggiore ");
+	t = t.replace(/ü/gi,"u");
 
 
 	t = t.replace(/[^a-zA-Z0-9 -,Èàèéìòùç!?.\']/g,' ');
