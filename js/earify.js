@@ -41,6 +41,7 @@ var earify = {
 		// execute on click
 		$('#speech').submit(function(e) {
 			e.preventDefault();
+			earify.lastTweetId = null;
 			earify.sequence();
 		});
 
