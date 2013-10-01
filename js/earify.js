@@ -292,10 +292,12 @@ var earify = {
 
 	togglePolling: function(ev) {
 		if (earify.pollingId === null) {
+			$('#speech').slideUp();
 			earify.pollingId = setInterval(function() {
 				earify.sequence();
 			}, earify.config.checkTweetTimeout);
 		} else {
+			$('#speech').slideDown();
 			clearInterval(earify.pollingId)
 			earify.pollingId = null;
 		}

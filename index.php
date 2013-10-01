@@ -27,7 +27,7 @@
 			</div>
 
 			<div id="options">
-				<input type="checkbox" id="polltweet" name="polltweet"> <label for="polltweet">Aggiorna i tweet</label> 
+				<input type="checkbox" id="polltweet" name="polltweet"> <label for="polltweet">Aggiorna automaticamente</label> 
 			</div>
 <!-- da implementare 
 			<div>
