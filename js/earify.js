@@ -6,6 +6,22 @@ var earify = {
 	tmpTweet: {},
 	tweet: {},
 
+	/**
+	 * store the last tweet id attribute
+	 * to know if the tweet received is to play
+	 */
+	lastTweetId: null,
+
+	/**
+	 * the id created by setInterval() to poll new tweet
+	 */
+	pollingId: null,
+
+	/**
+	 * true when a tweet is playing
+	 */
+	playingTweet: false,
+
 	/*
 	** methods
 	*/
@@ -15,7 +31,8 @@ var earify = {
 			proxyURL : "http://xho.bedita.net/var/earify-twitter-proxy.php?user=",
 			lang : "it",
 			apiURL : "http://tts-api.com/tts.mp3?",
-			messageTimeout : 5000
+			messageTimeout : 5000,
+			checkTweetTimeout: 10000
 		};
 
 		// allow overriding the default config
@@ -26,6 +43,8 @@ var earify = {
 			e.preventDefault();
 			earify.sequence();
 		});
+
+		$('#polltweet').on('click', earify.togglePolling);
 
 		earify.intro();
 	},
@@ -42,12 +61,12 @@ var earify = {
 
 	// all sequence to play and reenable UI
 	sequence: function() {
-		console.log('0. start');
-		$('#loader').show();
-		earify.cleanupUI();
+		if (!earify.playingTweet) {
+			console.log('0. start');
+			$('#loader').show();
 
-		// set user
-		var user = earify.setUser();
+			// set user
+			var user = earify.setUser();
 
 		// update URL & title
 		if ( history.pushState ) {		
@@ -60,10 +79,23 @@ var earify = {
 		// deferred sequence
 		var promise = earify.getTweet(user);
 		promise
-			.then(earify.setTweet)
-			.then(earify.updateUI)
-			.done(earify.play)
-			.fail( function() { earify.cleanupUI(); $('#loader').hide(); earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste'); } );
+			.then(function() {
+				if (earify.isNewTweet()) {
+					earify.cleanupUI();
+					return earify.setTweet()
+							.then(earify.updateUI)
+							.done(earify.play);
+				} else {
+					$('#loader').hide();
+					return $.Deferred().resolve();
+				}
+			})
+			.fail(function() {
+				earify.cleanupUI();
+				$('#loader').hide();
+				earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste');
+			});
+		}
 	},
 
 
@@ -113,9 +145,20 @@ var earify = {
 			}
 		}
 
-
 		deferred.resolve();
 		return deferred.promise();
+	},
+
+	isNewTweet: function() {
+		var isNew = false;
+		if (earify.lastTweetId) {
+			if (earify.lastTweetId != earify.tmpTweet.id) {
+				isNew = true;
+			}
+		} else {
+			isNew = true;
+		}
+		return isNew;
 	},
 
 
@@ -209,7 +252,17 @@ var earify = {
 		audio.play();
 		console.log("6. play: " + audio.src);
 */
-		meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 });
+		earify.playingTweet = true;
+		try {
+			meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 }, function() {
+				earify.playingTweet = false;
+				earify.lastTweetId = earify.tmpTweet.id;
+			});
+		} catch(e) {
+			earify.playingTweet = false;
+			console.error('error: ' +  e.name + " - " + e.message);
+			earify.triggerError('Ops, c\'è stato un errore. Non riesco a ripetere il tweet');
+		}
 	},
 
 
@@ -230,7 +283,18 @@ var earify = {
 			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
 		});
 		
-	}
+	},
+
+	togglePolling: function(ev) {
+		if (earify.pollingId === null) {
+			earify.pollingId = setInterval(function() {
+				earify.sequence();
+			}, earify.config.checkTweetTimeout);
+		} else {
+			clearInterval(earify.pollingId)
+			earify.pollingId = null;
+		}
+	},
 
 	// to fix isPlaying: function(auelement) { return !auelement.paused; }
 }
