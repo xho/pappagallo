@@ -50,6 +50,11 @@ var earify = {
 			earify.sequence();
 		});
 
+		// change language
+		$('#language').on('change', function() {
+			earify.changeLanguage( $('#language').val() );
+		});
+
 		$('#polltweet').on('click', earify.togglePolling);
 
 		earify.intro();
@@ -316,6 +321,20 @@ var earify = {
 
 	isPlaying: function() {
 		return earify.playingMessage;
+	},
+
+	changeLanguage: function(lang) {
+		console.log ("changing language: " + lang);
+		meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {
+			if (lang == "it")
+				earify.triggerError("Puttana galera. Soppoliglotta io.");
+			else if (lang == "es")
+				earify.triggerError("Oh puta madre...");
+			else if (lang == "en")
+				earify.triggerError("Shit...");
+			else if (lang == "fr")
+				earify.triggerError("Merd...");
+		});
 	}
 }
 

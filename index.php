@@ -23,7 +23,16 @@
 			</header>
 
 			<div>
-				<form id="speech" action=""><span id="at">@</span> <input type="text" id="user" value="<?php echo $user; ?>"> <input type="submit" value="Pappagallo"></form>
+				<form id="speech" action="">
+					<span id="at">@</span> <input type="text" id="user" value="<?php echo $user; ?>">
+					<select id="language">
+						<option value="it">it</option>
+						<option value="en">en</option>
+						<option value="fr">fr</option>
+						<option value="es">es</option>
+					</select>
+					<input type="submit" value="Pappagallo">
+				</form>
 			</div>
 
 			<div id="options">
