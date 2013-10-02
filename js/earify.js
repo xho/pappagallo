@@ -321,6 +321,7 @@ var earify = {
 	togglePolling: function(ev) {
 		if (earify.pollingId === null) {
 			$('#speech').slideUp();
+			earify.sequence(); // start immediately
 			earify.pollingId = setInterval(function() {
 				earify.sequence();
 			}, earify.config.autoUpdateEvery);
