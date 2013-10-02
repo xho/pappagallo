@@ -27,20 +27,24 @@ var earify = {
 	 */
 	playingMessage: false,
 
+	/**
+	 * default config
+	 */
+	config: {
+		user: "riotta",
+		proxyURL : "http://xho.bedita.net/var/earify-twitter-proxy.php?user=",
+		apiURL : "http://tts-api.com/tts.mp3?", // unused
+		lang : "it",
+		messageTimeout : 5000,
+		autoUpdateEvery : 15000, // ms
+		excludeReplies : false,
+		excludeRT : false
+	},
+
 	/*
 	** methods
 	*/
 	init: function( settings ) {
-		earify.config = {
-			user: "riotta",
-			proxyURL : "http://xho.bedita.net/var/earify-twitter-proxy.php?user=",
-			apiURL : "http://tts-api.com/tts.mp3?", // unused
-			lang : "it",
-			messageTimeout : 5000,
-			autoUpdateEvery : 15000, // ms
-			excludeReplies : false,
-			excludeRT : false
-		};
 
 		// allow overriding the default config
 		$.extend( earify.config, settings );
