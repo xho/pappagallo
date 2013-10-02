@@ -22,12 +22,12 @@
 	session_start();
 	require_once("twitteroauth/twitteroauth/twitteroauth.php"); //Path to twitteroauth library you downloaded in step 3
 
-	// $twitteruser = "riotta"; //user name you want to reference
+	$twitteruser = "user"; //user name of twitter user using this service (owner of the app)
 	$notweets = 1; //how many tweets you want to retrieve
-	$consumerkey = "haudswXMv6tFaPzHB26w"; //Noted keys from step 2
-	$consumersecret = "ksPKVKBcccLYaGHf5NE1i8DeBuWEkLsUn3yY7Nb9HZY"; //Noted keys from step 2
-	$accesstoken = "81815107-paAJK4ne226KBMqjL9HPDVzALKm2R66LhVQKBZLID"; //Noted keys from step 2
-	$accesstokensecret = "5IxBdbQsOAbxpFxQHPPmMjDS5dmwenXSpE834pSqbE"; //Noted keys from step 2
+    $consumerkey = "12345"; //Noted keys from step 2
+    $consumersecret = "123456789"; //Noted keys from step 2
+    $accesstoken = "123456789"; //Noted keys from step 2
+    $accesstokensecret = "12345"; //Noted keys from step 2
 
 	function getConnectionWithAccessToken($cons_key, $cons_secret, $oauth_token, $oauth_token_secret) {
 	  $connection = new TwitterOAuth($cons_key, $cons_secret, $oauth_token, $oauth_token_secret);
