@@ -71,6 +71,9 @@ article>div {
 	color: #fff;
 }
 
+
+#tweet>p>span:first-child { float: left; }
+#tweet>p>span:last-child { float: right; }
 #at { font-size: 1.2em; position: relative; top: 2px; }
 #user {
 	height: 2em;

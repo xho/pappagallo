@@ -453,3 +453,25 @@ function updateQueryString(key, value, url) {
             return url;
     }
 }
+
+
+
+
+function TwitterDateConverter(time){
+	var date = new Date(time),
+		diff = (((new Date()).getTime() - date.getTime()) / 1000),
+		day_diff = Math.floor(diff / 86400);
+ 
+	if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
+		return;
+ 
+	return day_diff == 0 && (
+			diff < 60 && "pochi secondi fa" ||
+			diff < 120 && "circa un minuto fa" ||
+			diff < 3600 && Math.floor( diff / 60 ) + " minuti fa" ||
+			diff < 7200 && "un'ora fa" ||
+			diff < 86400 && Math.floor( diff / 3600 ) + " ore fa") ||
+		day_diff == 1 && "Ieri" ||
+		day_diff < 7 && day_diff + " giorni fa" ||
+		day_diff < 31 && Math.ceil( day_diff / 7 ) + " settimane fa";
+}
