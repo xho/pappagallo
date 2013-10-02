@@ -153,6 +153,7 @@ var earify = {
 	setTweet: function() {
 		console.log('4. set tweet');
 		var deferred = $.Deferred();
+		earify.tweet.datetime = earify.originalTweet.created_at;
 		earify.tweet.text = earify.originalTweet.text;
 		earify.tweet.name = earify.originalTweet.user.name;
 		earify.tweet.fullname = earify.originalTweet.user.name;
@@ -161,6 +162,7 @@ var earify = {
 		earify.tweet.screen_name = earify.originalTweet.user.screen_name;
 		earify.tweet.hashtags = earify.originalTweet.entities.hashtags;
 		earify.tweet.urls = earify.originalTweet.entities.urls;
+		
 		if (earify.originalTweet.entities.media) {
 			console.log ("(media detected)");
 			earify.tweet.mediaurl = earify.originalTweet.entities.media[0].media_url;
@@ -213,6 +215,7 @@ var earify = {
 		var deferred = $.Deferred();
 
 		// text
+		$('#tweet>p>span:last').text(twitterDateConverter(earify.tweet.datetime));
 		$('#text').text(earify.tweet.text);
 		$("#length").val(document.getElementById("text").innerHTML.length);
 
@@ -457,12 +460,12 @@ function updateQueryString(key, value, url) {
 
 
 
-function TwitterDateConverter(time){
+function twitterDateConverter(time){
 	var date = new Date(time),
 		diff = (((new Date()).getTime() - date.getTime()) / 1000),
 		day_diff = Math.floor(diff / 86400);
  
-	if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
+	if ( isNaN(day_diff) || day_diff < 0 )
 		return;
  
 	return day_diff == 0 && (
@@ -473,5 +476,7 @@ function TwitterDateConverter(time){
 			diff < 86400 && Math.floor( diff / 3600 ) + " ore fa") ||
 		day_diff == 1 && "Ieri" ||
 		day_diff < 7 && day_diff + " giorni fa" ||
-		day_diff < 31 && Math.ceil( day_diff / 7 ) + " settimane fa";
+		day_diff < 31 && Math.ceil( day_diff / 7 ) + " settimane fa" ||
+		day_diff > 31 && "mesi fa";
+;
 }

@@ -46,7 +46,7 @@
 			</div>
 
 			<div id="tweet">
-				<p class="clearfix"><span>Ultimo tweet:</span><span>5 giorni fa</span></p>
+				<p class="clearfix"><span>Ultimo tweet:</span><span></span></p>
 				<div id="text" class="textarea"></div>
 				<input type="text" id="length" value="0" class="counter" readonly>
 				<div id="face"><img src="img/baloon-arrow.png" id="baloon-arrow"><div id="namebio"></div></div>
