@@ -16,7 +16,7 @@
 		<link rel='stylesheet' href='css/earify.css'/>
 	</head>
 
-	<body>
+	<body<?php if (!empty($_GET["user"])):?> data-get-request="true"<?php endif; ?>>
 		<article class="box-transition-slow">
 
 			<header>

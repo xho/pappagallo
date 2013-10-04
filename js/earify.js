@@ -27,6 +27,8 @@ var earify = {
 	 */
 	playingMessage: false,
 
+	storageConfigName: 'pappagallo.config',
+
 	/**
 	 * default config
 	 */
@@ -46,8 +48,23 @@ var earify = {
 	*/
 	init: function( settings ) {
 
+		var savedConfig = earify.getStorageConfig();
+		if (savedConfig === false) {
+			savedConfig = {};
+		} else {
+			/*var welcomeMsg = 'Ehi! Bentornato!';
+			if (savedConfig.lang == 'en') {
+				welcomeMsg = 'Welcome back!';
+			}
+			meSpeak.loadVoice("js/mespeak/voices/" + earify.config.lang + ".json", function() {
+				earify.triggerMessage(welcomeMsg);
+			});*/
+		}
+
 		// allow overriding the default config
-		$.extend( earify.config, settings );
+		$.extend( earify.config, savedConfig, settings );
+
+		earify.initUI();
 
 		// execute on click
 		$('#speech').submit(function(e) {
@@ -61,13 +78,21 @@ var earify = {
 			var l = $(this).val();
 			earify.changeLanguage( l );
 			earify.config.lang = l;
+			earify.setStorageConfig(earify.config);
 		});
 
 		$('#polltweet').on('click', earify.togglePolling);
-		$('#excludereplies').on('click', function() { earify.config.excludeReplies = !(earify.config.excludeReplies); });
-		$('#excludert').on('click', function() { earify.config.excludeRT = !(earify.config.excludeRT) });
+		$('#excludereplies').on('click', function() {
+			earify.config.excludeReplies = !(earify.config.excludeReplies);
+			earify.setStorageConfig(earify.config);
+		});
+		$('#excludert').on('click', function() {
+			earify.config.excludeRT = !(earify.config.excludeRT);
+			earify.setStorageConfig(earify.config);
+		});
 
 		earify.intro();
+		earify.setStorageConfig(earify.config);
 	},
 
 
@@ -79,6 +104,41 @@ var earify = {
 		$("article").css('padding-bottom', h);
 	},
 
+	initUI: function() {
+		if ($("body[data-get-request]").length == 0) {
+			$("#user").val(earify.config.user);
+		}
+		$("#language option[value=" + earify.config.lang + "]").prop('selected', true);
+		if (earify.config.excludeReplies) {
+			$("#excludereplies").prop('checked', true);
+		}
+		if (earify.config.excludeRT) {
+			$("#excludert").prop('checked', true);
+		}
+	},
+
+	getStorageConfig: function() {
+		try {
+			var config = localStorage.getItem(earify.storageConfigName) || '{}';
+			config = (config && JSON.parse(config)) || {};
+			return config;
+		} catch (e) {
+			console.error('error getting localStorage item');
+			return false;
+		}
+	},
+
+	setStorageConfig: function(data) {
+		try {
+			var config = earify.getStorageConfig();
+			$.extend(config, data);
+			localStorage.setItem(earify.storageConfigName, JSON.stringify(config));
+			return true;
+		} catch (e) {
+			console.error('error setting localStorage item');
+			return false;
+		}
+	},
 
 	// all sequence to play and reenable UI
 	sequence: function() {
@@ -90,6 +150,7 @@ var earify = {
 
 			// set user
 			var user = earify.setUser();
+			earify.setStorageConfig({'user': user});
 
 		// update URL & title
 		if ( history.pushState ) {		
@@ -310,6 +371,13 @@ var earify = {
 			return $('#user').val();
 	},
 
+	triggerMessage: function(msg) {
+		$('#error .msg').html(msg)
+		$('#error').fadeIn(1000, function() {
+			earify.play(msg);
+			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
+		});
+	},
 
 	triggerError: function (msg) {
 		console.log('Sequence failed. Triggering error: ' + msg);
@@ -318,7 +386,6 @@ var earify = {
 			earify.play(msg);
 			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
 		});
-		
 	},
 
 	togglePolling: function(ev) {
@@ -343,13 +410,13 @@ var earify = {
 		console.log ("changing language: " + lang);
 		meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {
 			if (lang == "it")
-				earify.triggerError("Puttana galera. Soppoliglotta io.");
+				earify.triggerMessage("Puttana galera. Soppoliglotta io.");
 			else if (lang == "es")
-				earify.triggerError("Oh puta madre...");
+				earify.triggerMessage("Oh puta madre...");
 			else if (lang == "en")
-				earify.triggerError("Shit...");
+				earify.triggerMessage("Shit...");
 			else if (lang == "fr")
-				earify.triggerError("Merd...");
+				earify.triggerMessage("Merd...");
 		});
 	}
 }
