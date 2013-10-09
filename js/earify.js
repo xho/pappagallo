@@ -49,17 +49,6 @@ var earify = {
 	init: function( settings ) {
 
 		var savedConfig = earify.getStorageConfig();
-		if (savedConfig === false) {
-			savedConfig = {};
-		} else {
-			/*var welcomeMsg = 'Ehi! Bentornato!';
-			if (savedConfig.lang == 'en') {
-				welcomeMsg = 'Welcome back!';
-			}
-			meSpeak.loadVoice("js/mespeak/voices/" + earify.config.lang + ".json", function() {
-				earify.triggerMessage(welcomeMsg);
-			});*/
-		}
 
 		// allow overriding the default config
 		$.extend( earify.config, savedConfig, settings );
@@ -91,7 +80,34 @@ var earify = {
 			earify.setStorageConfig(earify.config);
 		});
 
-		earify.intro();
+		var loadingWelcomeMsg = true;
+
+		if (savedConfig === false) {
+			savedConfig = {};
+		} else if (!$.isEmptyObject(savedConfig)) {
+			loadingWelcomeMsg = new $.Deferred();
+			var lastVisit = twitterDateConverter(earify.config.lastVisit);
+			var welcomeMsg = 'Ehi! Ciao! Ti ho parlato ' + lastVisit;
+			if (savedConfig.lang == 'en') {
+				welcomeMsg = 'Welcome back! I talk to you ' + lastVisit;
+			}
+
+			try {
+				meSpeak.loadVoice("js/mespeak/voices/" + earify.config.lang + ".json", function() {
+					earify.triggerMessage(welcomeMsg);
+					loadingWelcomeMsg.resolve();
+				});
+			} catch (e) {
+				console.error('fail to load ' + earify.config.lang);
+				loadingWelcomeMsg.reject();
+			}
+		}
+
+		$.when(loadingWelcomeMsg)
+		.always(function() {
+			earify.intro();
+		});
+		
 		earify.setStorageConfig(earify.config);
 	},
 
@@ -132,6 +148,7 @@ var earify = {
 		try {
 			var config = earify.getStorageConfig();
 			$.extend(config, data);
+			config.lastVisit = new Date();
 			localStorage.setItem(earify.storageConfigName, JSON.stringify(config));
 			return true;
 		} catch (e) {
@@ -372,7 +389,7 @@ var earify = {
 	},
 
 	triggerMessage: function(msg) {
-		$('#error .msg').html(msg)
+		$('#error .msg').html(msg);
 		$('#error').fadeIn(1000, function() {
 			earify.play(msg);
 			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
