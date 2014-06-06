@@ -16,7 +16,7 @@
 		<link rel='stylesheet' href='css/earify.css'/>
 	</head>
 
-	<body>
+	<body<?php if (!empty($_GET["user"])):?> data-get-request="true"<?php endif; ?>>
 		<article class="box-transition-slow">
 
 			<header>
@@ -73,7 +73,7 @@
 			</div>
 
 			<footer class="box-transition-slow">
-				<p style="font-weight: bold;">Il Pappagallo v0.1</p>
+				<p style="font-weight: bold;">Il Pappagallo v0.2b</p>
 				<p>(ɔ) 2013 by <a href="http://www.twitter.com/xho" target="_blank">@xho</a> and <a href="http://www.twitter.com/batopa" target="_blank">@bato</a>
 					| GNU <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GPLv3</a></p>
 				<p>Immagine di background di <a href="http://www.flickr.com/photos/duncanbarrett/4085793930/" target="_blank">Duncan Barrett</a></p>

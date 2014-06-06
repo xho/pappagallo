@@ -27,6 +27,14 @@ var earify = {
 	 */
 	playingMessage: false,
 
+	storageConfigName: 'pappagallo.config',
+
+	/**
+	 * true if Speech Synthesis API is detected
+	 * @type {Boolean}
+	 */
+	speechSynthesisDetected: false,
+
 	/**
 	 * default config
 	 */
@@ -46,8 +54,17 @@ var earify = {
 	*/
 	init: function( settings ) {
 
+		if ('speechSynthesis' in window) {
+            // Synthesis support!
+            earify.speechSynthesisDetected = true;
+        }
+
+		var savedConfig = earify.getStorageConfig();
+
 		// allow overriding the default config
-		$.extend( earify.config, settings );
+		$.extend( earify.config, savedConfig, settings );
+
+		earify.initUI();
 
 		// execute on click
 		$('#speech').submit(function(e) {
@@ -59,15 +76,50 @@ var earify = {
 		// change language
 		$('#language').on('change', function() {
 			var l = $(this).val();
-			earify.changeLanguage( l );
 			earify.config.lang = l;
+			earify.setStorageConfig(earify.config);
+			earify.changeLanguage(l);
 		});
 
 		$('#polltweet').on('click', earify.togglePolling);
-		$('#excludereplies').on('click', function() { earify.config.excludeReplies = !(earify.config.excludeReplies); });
-		$('#excludert').on('click', function() { earify.config.excludeRT = !(earify.config.excludeRT) });
+		$('#excludereplies').on('click', function() {
+			earify.config.excludeReplies = !(earify.config.excludeReplies);
+			earify.setStorageConfig(earify.config);
+		});
+		$('#excludert').on('click', function() {
+			earify.config.excludeRT = !(earify.config.excludeRT);
+			earify.setStorageConfig(earify.config);
+		});
 
-		earify.intro();
+		var loadingWelcomeMsg = true;
+
+		if (savedConfig === false) {
+			savedConfig = {};
+		} else if (!$.isEmptyObject(savedConfig)) {
+			loadingWelcomeMsg = new $.Deferred();
+			var lastVisit = twitterDateConverter(earify.config.lastVisit);
+			var welcomeMsg = 'Ehi! Ciao! Ti ho parlato ' + lastVisit;
+			if (savedConfig.lang == 'en') {
+				welcomeMsg = 'Welcome back! I talk to you ' + lastVisit;
+			}
+
+			try {
+				meSpeak.loadVoice("js/mespeak/voices/" + earify.config.lang + ".json", function() {
+					earify.triggerMessage(welcomeMsg);
+					loadingWelcomeMsg.resolve();
+				});
+			} catch (e) {
+				console.error('fail to load ' + earify.config.lang);
+				loadingWelcomeMsg.reject();
+			}
+		}
+
+		$.when(loadingWelcomeMsg)
+		.always(function() {
+			earify.intro();
+		});
+		
+		earify.setStorageConfig(earify.config);
 	},
 
 
@@ -79,6 +131,42 @@ var earify = {
 		$("article").css('padding-bottom', h);
 	},
 
+	initUI: function() {
+		if ($("body[data-get-request]").length == 0) {
+			$("#user").val(earify.config.user);
+		}
+		$("#language option[value=" + earify.config.lang + "]").prop('selected', true);
+		if (earify.config.excludeReplies) {
+			$("#excludereplies").prop('checked', true);
+		}
+		if (earify.config.excludeRT) {
+			$("#excludert").prop('checked', true);
+		}
+	},
+
+	getStorageConfig: function() {
+		try {
+			var config = localStorage.getItem(earify.storageConfigName) || '{}';
+			config = (config && JSON.parse(config)) || {};
+			return config;
+		} catch (e) {
+			console.error('error getting localStorage item');
+			return false;
+		}
+	},
+
+	setStorageConfig: function(data) {
+		try {
+			var config = earify.getStorageConfig();
+			$.extend(config, data);
+			config.lastVisit = new Date();
+			localStorage.setItem(earify.storageConfigName, JSON.stringify(config));
+			return true;
+		} catch (e) {
+			console.error('error setting localStorage item');
+			return false;
+		}
+	},
 
 	// all sequence to play and reenable UI
 	sequence: function() {
@@ -90,18 +178,19 @@ var earify = {
 
 			// set user
 			var user = earify.setUser();
+			earify.setStorageConfig({'user': user});
 
-		// update URL & title
-		if ( history.pushState ) {		
-			var newurl = updateQueryString("user", user);
-			var stateObj = { user: user };
-			window.history.pushState(stateObj, "Pappagallo [" + user + "]", newurl);
-		}
-		document.title = "Pappagallo [" + user + "]";
+			// update URL & title
+			if ( history.pushState ) {		
+				var newurl = updateQueryString("user", user);
+				var stateObj = { user: user };
+				window.history.pushState(stateObj, "Pappagallo [" + user + "]", newurl);
+			}
+			document.title = "Pappagallo [" + user + "]";
 
-		// deferred sequence
-		var promise = earify.getTweet(user);
-		promise
+			// deferred sequence
+			var promise = earify.getTweet(user);
+			promise
 			.then(function() {
 				if (earify.isNewTweet()) {
 					earify.cleanupUI();
@@ -116,7 +205,7 @@ var earify = {
 			.fail(function() {
 				earify.cleanupUI();
 				$('#loader').hide();
-				earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste. Firulì.');
+				earify.triggerError('Oops, c\'è stato un errore. Forse questo utente non esiste. Firulì.');
 			})
 			.always(function() {
 				earify.sequenceRunning = false;
@@ -289,10 +378,29 @@ var earify = {
 */
 		earify.playingMessage = true;
 		try {
-			meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 }, function() {
-				earify.playingMessage = false;
-				earify.lastTweetId = earify.originalTweet.id;
-			});
+			if (earify.speechSynthesisDetected) {
+	            var msg = new SpeechSynthesisUtterance();
+	            msg.voiceURI = 'native';
+	            msg.volume = 1; // 0 to 1
+	            msg.rate = 1; // 0.1 to 10
+	            msg.pitch = 2; //0 to 2
+	            msg.lang = earify.config.lang + '-' + earify.config.lang.toUpperCase();
+	            msg.text = t;
+
+	            msg.onend = function(e) {
+	            	earify.playingMessage = false;
+					earify.lastTweetId = earify.originalTweet.id;
+	            };
+
+	            speechSynthesis.speak(msg);
+
+	        // fallback to meSpeak
+	        } else {
+				meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 }, function() {
+					earify.playingMessage = false;
+					earify.lastTweetId = earify.originalTweet.id;
+				});
+			}
 		} catch (e) {
 			earify.playingMessage = false;
 			console.error('error: ' +  e.name + " - " + e.message);
@@ -310,6 +418,13 @@ var earify = {
 			return $('#user').val();
 	},
 
+	triggerMessage: function(msg) {
+		$('#error .msg').html(msg);
+		$('#error').fadeIn(1000, function() {
+			earify.play(msg);
+			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
+		});
+	},
 
 	triggerError: function (msg) {
 		console.log('Sequence failed. Triggering error: ' + msg);
@@ -318,7 +433,6 @@ var earify = {
 			earify.play(msg);
 			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
 		});
-		
 	},
 
 	togglePolling: function(ev) {
@@ -341,16 +455,24 @@ var earify = {
 
 	changeLanguage: function(lang) {
 		console.log ("changing language: " + lang);
-		meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {
-			if (lang == "it")
-				earify.triggerError("Puttana galera. Soppoliglotta io.");
-			else if (lang == "es")
-				earify.triggerError("Oh puta madre...");
-			else if (lang == "en")
-				earify.triggerError("Shit...");
-			else if (lang == "fr")
-				earify.triggerError("Merd...");
-		});
+		var msg = '';
+		if (lang == "it") {
+			msg += "Puttana galera. Soppoliglotta io.";
+		} else if (lang == "es") {
+			msg += "Oh puta madre...";
+		} else if (lang == "en") {
+			msg += "Shit...";
+		} else if (lang == "fr") {
+			msg += "Merd...";
+		}
+
+		if (earify.speechSynthesisDetected) {
+			earify.triggerMessage(msg);
+		} else {
+			meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {
+				earify.triggerMessage(msg);
+			});
+		}
 	}
 }
 
