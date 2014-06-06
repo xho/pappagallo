@@ -30,6 +30,12 @@ var earify = {
 	storageConfigName: 'pappagallo.config',
 
 	/**
+	 * true if Speech Synthesis API is detected
+	 * @type {Boolean}
+	 */
+	speechSynthesisDetected: false,
+
+	/**
 	 * default config
 	 */
 	config: {
@@ -48,6 +54,11 @@ var earify = {
 	*/
 	init: function( settings ) {
 
+		if ('speechSynthesis' in window) {
+            // Synthesis support!
+            earify.speechSynthesisDetected = true;
+        }
+
 		var savedConfig = earify.getStorageConfig();
 
 		// allow overriding the default config
@@ -65,9 +76,9 @@ var earify = {
 		// change language
 		$('#language').on('change', function() {
 			var l = $(this).val();
-			earify.changeLanguage( l );
 			earify.config.lang = l;
 			earify.setStorageConfig(earify.config);
+			earify.changeLanguage(l);
 		});
 
 		$('#polltweet').on('click', earify.togglePolling);
@@ -169,17 +180,17 @@ var earify = {
 			var user = earify.setUser();
 			earify.setStorageConfig({'user': user});
 
-		// update URL & title
-		if ( history.pushState ) {		
-			var newurl = updateQueryString("user", user);
-			var stateObj = { user: user };
-			window.history.pushState(stateObj, "Pappagallo [" + user + "]", newurl);
-		}
-		document.title = "Pappagallo [" + user + "]";
+			// update URL & title
+			if ( history.pushState ) {		
+				var newurl = updateQueryString("user", user);
+				var stateObj = { user: user };
+				window.history.pushState(stateObj, "Pappagallo [" + user + "]", newurl);
+			}
+			document.title = "Pappagallo [" + user + "]";
 
-		// deferred sequence
-		var promise = earify.getTweet(user);
-		promise
+			// deferred sequence
+			var promise = earify.getTweet(user);
+			promise
 			.then(function() {
 				if (earify.isNewTweet()) {
 					earify.cleanupUI();
@@ -194,7 +205,7 @@ var earify = {
 			.fail(function() {
 				earify.cleanupUI();
 				$('#loader').hide();
-				earify.triggerError('Ops, c\'è stato un errore. Forse questo utente non esiste. Firulì.');
+				earify.triggerError('Oops, c\'è stato un errore. Forse questo utente non esiste. Firulì.');
 			})
 			.always(function() {
 				earify.sequenceRunning = false;
@@ -367,10 +378,29 @@ var earify = {
 */
 		earify.playingMessage = true;
 		try {
-			meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 }, function() {
-				earify.playingMessage = false;
-				earify.lastTweetId = earify.originalTweet.id;
-			});
+			if (earify.speechSynthesisDetected) {
+	            var msg = new SpeechSynthesisUtterance();
+	            msg.voiceURI = 'native';
+	            msg.volume = 1; // 0 to 1
+	            msg.rate = 1; // 0.1 to 10
+	            msg.pitch = 2; //0 to 2
+	            msg.lang = earify.config.lang + '-' + earify.config.lang.toUpperCase();
+	            msg.text = t;
+
+	            msg.onend = function(e) {
+	            	earify.playingMessage = false;
+					earify.lastTweetId = earify.originalTweet.id;
+	            };
+
+	            speechSynthesis.speak(msg);
+
+	        // fallback to meSpeak
+	        } else {
+				meSpeak.speak(t, { speed: 150, pitch: 40, wordgap: 5 }, function() {
+					earify.playingMessage = false;
+					earify.lastTweetId = earify.originalTweet.id;
+				});
+			}
 		} catch (e) {
 			earify.playingMessage = false;
 			console.error('error: ' +  e.name + " - " + e.message);
@@ -425,16 +455,24 @@ var earify = {
 
 	changeLanguage: function(lang) {
 		console.log ("changing language: " + lang);
-		meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {
-			if (lang == "it")
-				earify.triggerMessage("Puttana galera. Soppoliglotta io.");
-			else if (lang == "es")
-				earify.triggerMessage("Oh puta madre...");
-			else if (lang == "en")
-				earify.triggerMessage("Shit...");
-			else if (lang == "fr")
-				earify.triggerMessage("Merd...");
-		});
+		var msg = '';
+		if (lang == "it") {
+			msg += "Puttana galera. Soppoliglotta io.";
+		} else if (lang == "es") {
+			msg += "Oh puta madre...";
+		} else if (lang == "en") {
+			msg += "Shit...";
+		} else if (lang == "fr") {
+			msg += "Merd...";
+		}
+
+		if (earify.speechSynthesisDetected) {
+			earify.triggerMessage(msg);
+		} else {
+			meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {
+				earify.triggerMessage(msg);
+			});
+		}
 	}
 }
 
