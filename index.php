@@ -37,7 +37,7 @@
 
 			<div id="options">
 				<p>
-					<input type="checkbox" id="polltweet" name="polltweet"> <label for="polltweet">Aggiorna automaticamente</label><br/>
+					<input type="checkbox" id="polltweet" name="polltweet"> <label for="polltweet">Aggiorna automaticamente</label>
 				</p>
 				<p>
 					<input type="checkbox" id="excludereplies" name="excludereplies"> <label for="excludereplies">Escludi replies</label>
