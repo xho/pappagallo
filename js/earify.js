@@ -30,10 +30,10 @@ var earify = {
 	storageConfigName: 'pappagallo.config',
 
 	/**
-	 * true if Speech Synthesis API is detected
+	 * true if Favella (Speech Synthesis API) is detected
 	 * @type {Boolean}
 	 */
-	speechSynthesisDetected: false,
+	favellaDetected: false,
 
 	/**
 	 * default config
@@ -54,9 +54,9 @@ var earify = {
 	*/
 	init: function( settings ) {
 
-		if ('speechSynthesis' in window) {
-            // Synthesis support!
-            earify.speechSynthesisDetected = true;
+		if ('Favella' in window) {
+            // Favella support!
+            earify.favellaDetected = true;
         }
 
 		var savedConfig = earify.getStorageConfig();
@@ -378,21 +378,15 @@ var earify = {
 */
 		earify.playingMessage = true;
 		try {
-			if (earify.speechSynthesisDetected) {
-	            var msg = new SpeechSynthesisUtterance();
-	            msg.voiceURI = 'native';
-	            msg.volume = 1; // 0 to 1
-	            msg.rate = 1; // 0.1 to 10
-	            msg.pitch = 2; //0 to 2
-	            msg.lang = earify.config.lang + '-' + earify.config.lang.toUpperCase();
-	            msg.text = t;
-
-	            msg.onend = function(e) {
-	            	earify.playingMessage = false;
-					earify.lastTweetId = earify.originalTweet.id;
-	            };
-
-	            speechSynthesis.speak(msg);
+			if (earify.favellaDetected) {
+	            var options = {
+                    lang: earify.config.lang + '-' + earify.config.lang.toUpperCase(),
+                    onend: function(e) {
+    	            	earify.playingMessage = false;
+    					earify.lastTweetId = earify.originalTweet.id;
+    	            }
+                };
+	        	Favella.speak(t, options);
 
 	        // fallback to meSpeak
 	        } else {
@@ -466,7 +460,7 @@ var earify = {
 			msg += "Merd...";
 		}
 
-		if (earify.speechSynthesisDetected) {
+		if (earify.favellaDetected) {
 			earify.triggerMessage(msg);
 		} else {
 			meSpeak.loadVoice("js/mespeak/voices/" + lang + ".json", function() {

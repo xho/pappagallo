@@ -97,5 +97,6 @@
 		meSpeak.loadConfig("js/mespeak/mespeak_config.json");
 		meSpeak.loadVoice("js/mespeak/voices/it.json");
 	</script>
+    <script src="js/favella.min.js"></script>
 	<script src="js/earify.js"></script>
 </html>
