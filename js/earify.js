@@ -132,7 +132,7 @@ var earify = {
 	},
 
 	initUI: function() {
-		if ($("body[data-get-request]").length == 0) {
+		if ($("body[data-get-request]").length === 0) {
 			$("#user").val(earify.config.user);
 		}
 		$("#language option[value=" + earify.config.lang + "]").prop('selected', true);
@@ -309,7 +309,7 @@ var earify = {
 		$("#length").val(document.getElementById("text").innerHTML.length);
 
 		// hashtags
-		for (i in earify.tweet.hashtags) {
+		for (var i in earify.tweet.hashtags) {
 			$('#hashtags .textarea').append('<a href="http://twitter.com/search?src=hash&q=%23' + earify.tweet.hashtags[i].text + '" target="_blank">#' + earify.tweet.hashtags[i].text + '</a> ');
 		}
 		$('#nhashtags').val(earify.tweet.hashtags.length);
@@ -337,7 +337,7 @@ var earify = {
 			if (earify.tweet.mediaurl) {
 				var img = $("<img />").attr('src', earify.tweet.mediaurl)
 				    .load(function() {
-				        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+				        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth === 0) {
 				            console.log('broken image!');
 				            return false;
 				        } else {
@@ -422,7 +422,7 @@ var earify = {
 
 	triggerError: function (msg) {
 		console.log('Sequence failed. Triggering error: ' + msg);
-		$('#error .msg').html(msg)
+		$('#error .msg').html(msg);
 		$('#error').fadeIn(1000, function() {
 			earify.play(msg);
 			setTimeout(function() { $('#error').fadeOut(); }, earify.config.messageTimeout);
@@ -438,7 +438,7 @@ var earify = {
 			}, earify.config.autoUpdateEvery);
 		} else {
 			$('#speech').slideDown();
-			clearInterval(earify.pollingId)
+			clearInterval(earify.pollingId);
 			earify.pollingId = null;
 		}
 	},
@@ -468,7 +468,7 @@ var earify = {
 			});
 		}
 	}
-}
+};
 
 
 $( document ).ready( earify.init() );
@@ -488,7 +488,7 @@ function countChars () {
 function cleanupText (t, lang, hashtags, URLs) {
 
 	// replace URLs
-	for (i in earify.tweet.urls) {
+	for (var i in earify.tweet.urls) {
 		t = t.split(earify.tweet.urls[i].url).join(' a questo indirizzo web ');
 	}
 
@@ -547,12 +547,13 @@ function replaceEmoticons(text) {
 function updateQueryString(key, value, url) {
     if (!url) url = window.location.href;
     var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
+	var hash;
 
     if (re.test(url)) {
         if (typeof value !== 'undefined' && value !== null)
             return url.replace(re, '$1' + key + "=" + value + '$2$3');
         else {
-            var hash = url.split('#');
+            hash = url.split('#');
             url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
             if (typeof hash[1] !== 'undefined' && hash[1] !== null) 
                 url += '#' + hash[1];
@@ -561,8 +562,8 @@ function updateQueryString(key, value, url) {
     }
     else {
         if (typeof value !== 'undefined' && value !== null) {
-            var separator = url.indexOf('?') !== -1 ? '&' : '?',
-                hash = url.split('#');
+            var separator = url.indexOf('?') !== -1 ? '&' : '?';
+            hash = url.split('#');
             url = hash[0] + separator + key + '=' + value;
             if (typeof hash[1] !== 'undefined' && hash[1] !== null) 
                 url += '#' + hash[1];
@@ -584,7 +585,7 @@ function twitterDateConverter(time){
 	if ( isNaN(day_diff) || day_diff < 0 )
 		return;
  
-	return day_diff == 0 && (
+	return day_diff === 0 && (
 			diff < 60 && "pochi secondi fa" ||
 			diff < 120 && "circa un minuto fa" ||
 			diff < 3600 && Math.floor( diff / 60 ) + " minuti fa" ||
@@ -594,5 +595,4 @@ function twitterDateConverter(time){
 		day_diff < 7 && day_diff + " giorni fa" ||
 		day_diff < 31 && Math.ceil( day_diff / 7 ) + " settimane fa" ||
 		day_diff > 31 && "mesi fa";
-;
 }
